@@ -37,6 +37,11 @@ sudo yum -y install openldap-servers openldap-clients nss-pam-ldapd
 sudo systemctl enable slapd
 sudo systemctl start slapd
 
+echo ">>> [0.5] Loading Standard Schemas..."
+sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif 2>/dev/null
+sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif 2>/dev/null
+sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif 2>/dev/null
+
 # ==========================================
 # PART 1: GENERATE CUSTOM LDIFs
 # ==========================================
@@ -56,7 +61,7 @@ olcRootDN: cn=admin,$BASE_DN
 add: olcRootPW
 olcRootPW: $HASH_ROOT
 -
-add: olcAccess
+replace: olcAccess
 olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=admin,$BASE_DN" write by anonymous auth by self write by * none
 olcAccess: {1}to dn.base="" by * read
 olcAccess: {2}to * by dn="cn=admin,$BASE_DN" write by * read
