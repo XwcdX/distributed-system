@@ -109,7 +109,7 @@ for USER_NAME in "${CUSTOM_USERS[@]}"; do
         chmod 700 ~/.ssh
         
         > ~/.ssh/known_hosts
-        ssh-keyscan -H ${ALL_CLUSTER_NODES[*]} >> ~/.ssh/known_hosts 2>/dev/null
+        ssh-keyscan -t ed25519 -H ${ALL_CLUSTER_NODES[*]} >> ~/.ssh/known_hosts 2>/dev/null
         chmod 644 ~/.ssh/known_hosts
     '"
 done

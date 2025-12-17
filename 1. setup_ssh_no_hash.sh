@@ -52,12 +52,13 @@ echo "$MY_SKELETON_KEY" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
 echo "Scanning network to populate known_hosts..."
+> ~/.ssh/known_hosts
 for i in {0..4}; do
     SCAN_IP=${ALL_IPS[$i]}
     SCAN_NAME=${ALL_NAMES[$i]}
     
     echo "   Scanning $SCAN_NAME ($SCAN_IP)..."
-    ssh-keyscan $SCAN_IP 2>/dev/null | sed "s/^$SCAN_IP/$SCAN_NAME,$SCAN_IP/" >> ~/.ssh/known_hosts
+    ssh-keyscan -t ed25519 $SCAN_IP 2>/dev/null | sed "s/^$SCAN_IP/$SCAN_NAME,$SCAN_IP/" >> ~/.ssh/known_hosts
 done
 
 echo ">>> Master Configured."

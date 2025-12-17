@@ -102,7 +102,7 @@ for NODE in "${ALL_NODES[@]}"; do
     
     if [ ! -z "$NODE_IP" ]; then
         echo "   Adding $NODE ($NODE_IP)..."
-        ssh-keyscan $NODE_IP 2>/dev/null | sed "s/^$NODE_IP/$NODE,$NODE_IP/" >> $TEMP_KNOWN_HOSTS
+        ssh-keyscan -t ed25519 $NODE_IP 2>/dev/null | sed "s/^$NODE_IP/$NODE,$NODE_IP/" >> $TEMP_KNOWN_HOSTS
     fi
 done
 

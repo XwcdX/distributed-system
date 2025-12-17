@@ -58,8 +58,8 @@ for i in {0..4}; do
     
     echo "   Scanning $SCAN_NAME ($SCAN_IP)..."
 
-    ssh-keyscan -H $SCAN_IP >> ~/.ssh/known_hosts 2>/dev/null
-    ssh-keyscan -H $SCAN_NAME >> ~/.ssh/known_hosts 2>/dev/null
+    ssh-keyscan -t ed25519 -H $SCAN_IP >> ~/.ssh/known_hosts 2>/dev/null
+    ssh-keyscan -t ed25519 -H $SCAN_NAME >> ~/.ssh/known_hosts 2>/dev/null
 done
 
 echo ">>> Master Configured."
