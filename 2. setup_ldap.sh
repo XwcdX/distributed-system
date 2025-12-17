@@ -34,8 +34,14 @@ fi
 
 echo ">>> [0] Installing OpenLDAP..."
 sudo yum -y install openldap-servers openldap-clients nss-pam-ldapd
+
+echo ">>> [0] Initializing LDAP Database..."
+sudo cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+sudo chown ldap:ldap /var/lib/ldap/DB_CONFIG
+
 sudo systemctl enable slapd
 sudo systemctl start slapd
+sleep 2
 
 echo ">>> [0.5] Loading Standard Schemas..."
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif 2>/dev/null
@@ -58,7 +64,7 @@ olcSuffix: $BASE_DN
 replace: olcRootDN
 olcRootDN: cn=admin,$BASE_DN
 -
-add: olcRootPW
+replace: olcRootPW
 olcRootPW: $HASH_ROOT
 -
 replace: olcAccess
@@ -111,6 +117,8 @@ done
 echo ">>> [2] Applying LDAP Config..."
 
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/1_modify_domain.ldif
+sudo systemctl restart slapd
+sleep 3
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/2_add_base_domain.ldif
 sudo ldapadd -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/3_add_ldap_users.ldif
 
@@ -152,7 +160,7 @@ sudo authconfig --enableldap --enableldaptls --enableldapauth \
 
 sudo sed -i 's/^ssl start_tls/#ssl start_tls/' /etc/nslcd.conf
 sudo sed -i 's/^tls_cacert /#tls_cacert /' /etc/nslcd.conf
-if grep -q "tls_cacertdir" /etc/nslcd.conf; then
+if sudo grep -q "tls_cacertdir" /etc/nslcd.conf; then
     sudo sed -i 's|^tls_cacertdir .*|tls_cacertdir /etc/pki/tls/certs|' /etc/nslcd.conf
 else
     echo "tls_cacertdir /etc/pki/tls/certs" | sudo tee -a /etc/nslcd.conf
