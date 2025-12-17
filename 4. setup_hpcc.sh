@@ -154,26 +154,26 @@ echo "Benchmark Folders Created."
 # ==========================================
 # CREATE RUNNER SCRIPT
 # ==========================================
-cat <<RUN_SCRIPT > ~/run_benchmarks.sh
+cat <<'RUN_SCRIPT' > ~/run_benchmarks.sh
 #!/bin/bash
 module load mpi/openmpi-x86_64
-MPI_CMD="\$ABSOLUTE_MPI"
+MPI_CMD=$(which mpiexec)
 HPCC_BIN="/opt/share/hpcc"
 
 echo "=== RUNNING 2 CORES (Master) ==="
-cd ~/hpcc-n2 && \$MPI_CMD -n 2 --host master:2 \$HPCC_BIN
+cd ~/hpcc-n2 && $MPI_CMD -n 2 --host master:2 $HPCC_BIN
 
 echo "=== RUNNING 4 CORES (Master + W1) ==="
-cd ~/hpcc-n4 && \$MPI_CMD -n 4 --host master:2,worker1:2 \$HPCC_BIN
+cd ~/hpcc-n4 && $MPI_CMD -n 4 --host master:2,worker1:2 $HPCC_BIN
 
 echo "=== RUNNING 6 CORES (M + W1 + W2) ==="
-cd ~/hpcc-n6 && \$MPI_CMD -n 6 --host master:2,worker1:2,worker2:2 \$HPCC_BIN
+cd ~/hpcc-n6 && $MPI_CMD -n 6 --host master:2,worker1:2,worker2:2 $HPCC_BIN
 
 echo "=== RUNNING 8 CORES (M + W1 + W2 + W3) ==="
-cd ~/hpcc-n8 && \$MPI_CMD -n 8 --host master:2,worker1:2,worker2:2,worker3:2 \$HPCC_BIN
+cd ~/hpcc-n8 && $MPI_CMD -n 8 --host master:2,worker1:2,worker2:2,worker3:2 $HPCC_BIN
 
 echo "=== RUNNING 10 CORES (All Nodes) ==="
-cd ~/hpcc-n10 && \$MPI_CMD -n 10 --host master:2,worker1:2,worker2:2,worker3:2,worker4:2 \$HPCC_BIN
+cd ~/hpcc-n10 && $MPI_CMD -n 10 --host master:2,worker1:2,worker2:2,worker3:2,worker4:2 $HPCC_BIN
 
 echo "ALL BENCHMARKS FINISHED."
 RUN_SCRIPT
