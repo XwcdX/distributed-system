@@ -143,8 +143,8 @@ cat <<PBS_TEST > ~/test/test.sh
 #PBS -q batch
 
 echo "Running on:"
-cat \$PBS_NODEFILE
-/usr/lib64/openmpi/bin/mpiexec -np 2 --hostfile \$PBS_NODEFILE /bin/hostname
+cat \\\$PBS_NODEFILE
+/usr/lib64/openmpi/bin/mpiexec -np 2 --hostfile \\\$PBS_NODEFILE /bin/hostname
 PBS_TEST
 
 generate_pbs() {
@@ -159,8 +159,7 @@ generate_pbs() {
 #PBS -q batch
 
 cd /home/ldap/$BENCHMARK_USER/hpcc-n\${CORES}
-echo "Starting HPCC n\${CORES}..."
-/usr/lib64/openmpi/bin/mpiexec -np \${CORES} --hostfile \$PBS_NODEFILE /opt/share/hpcc
+/usr/lib64/openmpi/bin/mpiexec -np \${CORES} --hostfile \\\$PBS_NODEFILE /opt/share/hpcc
 PBS_FILE
 }
 
