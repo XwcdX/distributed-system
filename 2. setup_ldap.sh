@@ -119,8 +119,8 @@ echo ">>> [2] Applying LDAP Config..."
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/1_modify_domain.ldif
 sudo systemctl restart slapd
 sleep 3
-sudo ldapadd -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/2_add_base_domain.ldif
-sudo ldapadd -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/3_add_ldap_users.ldif
+ldapadd -x -w "$ROOT_PW_Gw" -D "cn=admin,$BASE_DN" -f $LDAP_CONFIG_DIR/2_add_base_domain.ldif
+ldapadd -x -w "$ROOT_PW_Gw" -D "cn=admin,$BASE_DN" -f $LDAP_CONFIG_DIR/3_add_ldap_users.ldif
 
 echo ">>> [2] Updating /etc/openldap/ldap.conf..."
 if ! grep -q "URI ldaps://master" /etc/openldap/ldap.conf; then
