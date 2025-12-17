@@ -130,7 +130,7 @@ sudo chown ldap:ldap /etc/openldap/certs/server_*.pem
 sudo cp $LDAP_CONFIG_DIR/mycacert.crt /etc/pki/ca-trust/source/anchors/
 sudo update-ca-trust
 
-ldapmodify -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/4_modify_ssl.ldif
+sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f $LDAP_CONFIG_DIR/4_modify_ssl.ldif
 
 if grep -q "SLAPD_URLS" /etc/sysconfig/slapd; then
     sudo sed -i 's|.*SLAPD_URLS=.*|SLAPD_URLS="ldapi:/// ldap:/// ldaps:///"|' /etc/sysconfig/slapd
